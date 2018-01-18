@@ -1,0 +1,100 @@
+<!-- 分组列表 -->
+<div class="container-fluid">
+    <div class="info-center">
+        <!--title-->
+        <div class="info-center">
+            <div class="page-header">
+                <div class="pull-left">
+                    <h4>{{.pageTitle}}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!--content-list-->
+    <div class="content-list">
+		<div class="search-box row">
+            <div class="col-md-4">
+                <div class="btn-group pull-left" role="group" aria-label="...">
+                    <a href='{{urlfor "ProxyController.Add"}}' class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> 购买代理</a>
+                </div>
+            </div>
+        </div>
+        <div class="table-margin">
+            <form id="form-list" method="post" action="">
+                <table class="table table-bordered table-header">
+                    <thead>
+                    <tr>
+						<td width="5%">用户Id</td>
+                        <td width="5%">等级</td>
+                        <td width="13%">时间</td>
+						<td width="12%">文件名</td>
+						<td width="12%">函数名</td>
+                        <td width="8%">行号</td>
+                        <td>详细信息</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{range $k,$v := .list}}
+                    <tr>
+						<td>{{$v.UserId}}</td>
+						{{ if eq $v.Level "4" }} 
+							<td style="font-weight:bold;color:red">错误</td>
+						{{else if eq $v.Level "3" }}
+							<td style="font-weight:bold;color:Brown">警告</td>
+						{{else if eq $v.Level "2" }}
+							<td style="color:black">信息</td>
+						{{else if eq $v.Level "1" }}
+							<td style="color:#black">调试</td>
+						{{else}}
+							<td style="color:black">跟踪</td>
+						{{end}}
+                        <td>{{$v.TimeStamp}}</td>
+						<td>{{$v.FileName}}</td>
+						<td>{{$v.FuncName}}</td>
+                        <td>{{$v.FileNo}}</td>
+                        <td>{{$v.Info}}</td>
+                    </tr>
+                    {{end}}
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <div class="pull-right">
+                                {{str2html .pageBar}}
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function batch(action) {
+        if ($("input[name='ids']:checked").size() < 1) {
+            alert_message("请选择要操作的任务","alert-danger","alert-success");
+        } else {
+            if(action=='delete'){
+                if(!confirm("确定要删除所选吗？")) return;
+            }
+            var url = "{{urlfor "ProxyController.Batch"}}";
+            $.post(url + "?action=" + action, $("#form-list").serialize(), function(out) {
+                if (out.status != 0) {
+                    alert_message(out.msg,"alert-danger","alert-success");
+                } else {
+                    window.location.reload();
+                }
+            }, "json");
+        }
+        return false;
+    }
+
+    //点击行换色
+    $('tbody tr').click(function(){
+        $(this).addClass("warning").siblings().removeClass("warning");
+    });
+</script>

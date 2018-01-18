@@ -1,0 +1,98 @@
+<!-- 分组列表 -->
+<div class="container-fluid">
+    <div class="info-center">
+        <!--title-->
+        <div class="info-center">
+            <div class="page-header">
+                <div class="pull-left">
+                    <h4>{{.pageTitle}}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!--content-list-->
+    <div class="content-list">
+		<div class="search-box row">
+        </div>
+        <div class="table-margin">
+            <form id="form-list" method="post" action="">
+                <table class="table table-bordered table-header">
+                    <thead>
+                    <tr>
+						<td width="5%">Id</td>
+                        <td width="10%">帐号</td>
+						<td width="15%">邮箱</td>
+                        <td width="5%">状态</td>
+						<td width="15%">最近登录ip</td>
+						<td width="15%">最近登录时间</td>
+						<td width="15%">注册时间</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{range $k,$v := .list}}
+                    <tr>
+						<td class="center">{{$v.Id}}</td>
+                        <td>{{$v.account}}</td>
+                        <td>{{$v.Email}}</td>
+						{{ if eq $v.status "禁用" }} 
+							<td style="color:red">{{$v.status}}</td>
+						{{else}}
+							<td style="color:green">{{$v.status}}</td>
+						{{end}}
+						<td>{{$v.lastIp}}</td>
+						<td>{{$v.lastLogin}}</td>
+						<td>{{$v.createTime}}</td>
+                         <td>
+                            <a class="btn btn-info  btn-xs" href="{{urlfor "UserController.Edit"}}?id={{$v.Id}}">
+                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span> 编辑
+                            </a>
+							<a class="btn btn-danger  btn-xs" href="{{urlfor "UserController.Status"}}?id={{$v.Id}}">
+                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> 禁用
+                            </a>
+                        </td>
+                    </tr>
+                    {{end}}
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <div class="pull-right">
+                                {{str2html .pageBar}}
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function batch(action) {
+        if ($("input[name='ids']:checked").size() < 1) {
+            alert_message("请选择要操作的任务","alert-danger","alert-success");
+        } else {
+            if(action=='delete'){
+                if(!confirm("确定要删除所选吗？")) return;
+            }
+            var url = "{{urlfor "UserController.Batch"}}";
+            $.post(url + "?action=" + action, $("#form-list").serialize(), function(out) {
+                if (out.status != 0) {
+                    alert_message(out.msg,"alert-danger","alert-success");
+                } else {
+                    window.location.reload();
+                }
+            }, "json");
+        }
+        return false;
+    }
+
+    //点击行换色
+    $('tbody tr').click(function(){
+        $(this).addClass("warning").siblings().removeClass("warning");
+    });
+</script>

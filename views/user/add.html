@@ -1,0 +1,132 @@
+<!-- 新增用户 -->
+<div class="container-fluid">
+    <div class="info-center">
+        <!--title-->
+        <div class="info-center">
+            <div class="page-header">
+                <div class="pull-left">
+                    <h4>{{.pageTitle}}</h4>
+                </div>
+                <div class="pull-right">
+                    <!--  <button type="button" class="btn btn-mystyle btn-sm refresh">刷新</button>
+                     <button type="button" class="btn btn-mystyle btn-sm reback">返回</button> -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--content-list-->
+    <div class="content-list">
+        <form  action="{{urlfor "UserController.Add"}}" method="post" class="form-horizontal">
+        <div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="server_name">每月套餐</label>
+            <div class="col-sm-3" >
+                <select onchange="getPrice()" id="packageType"  name="packageType" class="btn-large form-control">
+	                {{range $k, $v := .selectType}}
+	                <option value="{{$k}}" >{{$v}}</option>
+	                {{end}}  
+                </select>
+            </div>
+            <div class="col-sm-6" style="padding-top:5px;">
+            </div>
+        </div>
+
+		<div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="server_name">购买时长</label>
+            <div class="col-sm-3" >
+                <select name="packageTime" id="packageTime" onchange="getPrice()"  class="btn-large form-control">
+	                {{range $k, $v := .selectTime}}
+	                <option value="{{$k}}" >{{$v}}</option>
+	                {{end}}  
+                </select>
+            </div>
+            <div class="col-sm-6" style="padding-top:5px;">
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="detail">套餐说明</label>
+            <div class="col-sm-5" >
+                <textarea name="detail" class="form-control" disabled=""  id="detail" rows="3">
+1、流量每个月 1号 重置
+2、套餐购买立即生效
+				</textarea>
+            </div>
+            <div class="col-sm-4" style="padding-top:5px;">
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="server_account">金额</label>
+            <div class="col-sm-3" >
+                <label id="price" class="col-sm-6 control-label" ></label>
+            </div>
+            <div class="col-sm-6" style="padding-top:5px;">
+
+            </div>
+        </div>
+
+
+
+        <br />
+        <div class="modal-footer" style="text-align:center">
+            <button type="submit" class="btn btn-primary submit_attr_button">购买</button>
+            <button type="button" class="btn btn-default reback">返回</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("form").submit(function () {
+            // $(".alert").hide();
+            $("button[type='submit']").attr('disabled', true);
+            $.post('{{urlfor "UserController.Add"}}', $(this).serialize(), function (out) {
+                if (out.status == 0) {
+                    window.location.href = '{{urlfor "UserController.List"}}';
+                } else {
+                    alert_message(out.msg,"alert-danger","alert-success");
+                    $("button[type='submit']").attr('disabled', false);
+                }
+            }, "json");
+            return false;
+        });
+
+        $("input[name='type']").click(function () {
+            if ($(this).val() > 0) {
+                $("#password").addClass('hide');
+                $("#public_key_src").removeClass('hide');
+                $("#private_key_src").removeClass('hide');
+            } else {
+                $("#password").removeClass('hide');
+                $("#public_key_src").addClass('hide');
+                $("#private_key_src").addClass('hide');
+            }
+        });
+    });
+	getPrice()
+	function getPrice() {
+		type_ = document.getElementById("packageType").value
+		time_ = document.getElementById("packageTime").value
+		res = 1
+		switch (type_) {
+			case "1": res = 5; break;
+			case "2": res = 10; break;
+			case "3": res = 20; break;
+			case "4": res = 40; break;
+			case "5": res = 80; break;
+			case "6": res = 120; break;
+		}
+		switch (time_) {
+			case "1": res = res * 1; break;
+			case "2": res = res * 2; break;
+			case "3": res = res * 3; break;
+			case "4": res = res * 5; break;
+			case "5": res = res * 8; break;
+		}
+		document.getElementById("price").innerHTML = res + "元"
+	}
+</script>

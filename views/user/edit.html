@@ -1,0 +1,101 @@
+<!-- 新增服务器 -->
+<div class="container-fluid">
+    <div class="info-center">
+        <!--title-->
+        <div class="info-center">
+            <div class="page-header">
+                <div class="pull-left">
+                    <h4>{{.pageTitle}}</h4>
+                </div>
+                <div class="pull-right">
+                    <!--  <button type="button" class="btn btn-mystyle btn-sm refresh">刷新</button>
+                     <button type="button" class="btn btn-mystyle btn-sm reback">返回</button> -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--content-list-->
+    <div class="content-list">
+        <form  action="{{urlfor "UserController.Edit"}}" method="post" class="form-horizontal">
+        <div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="server_ip">服务器地址</label>
+            <div class="col-sm-3" >
+                <input type="text"  class="form-control input-sm" disabled="" placeholder="" name="server_ip" value="{{.proxy.ServerIP}}" required />
+            </div>
+            <div class="col-sm-6" style="padding-top:5px;">
+
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="server_port">端口号</label>
+            <div class="col-sm-3" >
+                <input type="text"  class="form-control input-sm" name="server_port" value="{{.proxy.Port}}" required />
+            </div>
+            <div class="col-sm-6" style="padding-top:5px;">
+
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="server_passwd">密码</label>
+            <div class="col-sm-3" >
+                <input type="text"  class="form-control input-sm" placeholder="" name="server_passwd" value="{{.proxy.Passwd}}" required />
+            </div>
+            <div class="col-sm-6" style="padding-top:5px;">
+
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 15px">
+            <label class="col-sm-3 control-label" for="encryption">加密类型</label>
+            <div class="col-sm-3" >
+                <input type="text"  class="form-control input-sm" disabled="" placeholder="" name="encryption" value="{{.proxy.Encryption}}" required />
+            </div>
+            <div class="col-sm-6" style="padding-top:5px;">
+
+            </div>
+        </div>
+
+        <br />
+        <div class="modal-footer" style="text-align:center">
+            <input type="hidden" name="id" value="{{.proxy.Id}}" />
+            <button type="submit" class="btn btn-primary submit_attr_button">保存</button>
+            <button type="button" class="btn btn-default reback">返回</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("form").submit(function () {
+            // $(".alert").hide();
+            $("button[type='submit']").attr('disabled', true);
+            $.post('{{urlfor "UserController.Edit"}}', $(this).serialize(), function (out) {
+                if (out.status == 0) {
+                    window.location.href = '{{urlfor "UserController.List"}}';
+                } else {
+                    alert_message(out.msg,"alert-danger","alert-success");
+                    $("button[type='submit']").attr('disabled', false);
+                }
+            }, "json");
+            return false;
+        });
+
+        $("input[name='type']").click(function () {
+            if ($(this).val() > 0) {
+                $("#password").addClass('hide');
+                $("#public_key_src").removeClass('hide');
+                $("#private_key_src").removeClass('hide');
+            } else {
+                $("#password").removeClass('hide');
+                $("#public_key_src").addClass('hide');
+                $("#private_key_src").addClass('hide');
+            }
+        });
+    });
+</script>
