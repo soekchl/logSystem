@@ -1,5 +1,16 @@
 # logSystem
 
+# 调用模块添加
+	socket - tcp
+	传输用 pb
+	创建 net 模块 专门用于传输log
+
+
+
+# docker 数据库配置
+
+--- 
+
 创建数据库(utf8)：
 	CREATE DATABASE `logSystem` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
 	
