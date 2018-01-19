@@ -1,0 +1,52 @@
+syntax = "proto3";
+// 整体协议 分成  API、RET、公用结构体、相应api协议（结构体、协议）
+package api;
+
+enum API {
+	//基础,心跳
+	base_heart = 0; //心跳
+	
+	add_log = 1;	//	增加log
+}
+// 返回结果
+enum RET{
+	RET_OK = 0;
+	RET_ERR = 1;
+}
+
+// 日志等级
+enum LOG_LEAVE{
+	LEAVE_TRACK  = 0;	// 跟踪
+	LEAVE_DEBUG = 1;	// 调试
+	LEAVE_INFO = 2;		// 信息
+	LEAVE_WARR = 3;		// 警告
+	LEAVE_ERROR = 4;	// 错误
+}
+
+//============================ base_heart 心跳 =============================
+message base_heart_req {
+	int32 seq = 1;	//	随机数字
+}
+
+message base_heart_resp {
+	int32 seq = 1;	//	随机数字
+}
+
+//============================ add_log 增加log =============================
+message log_info {
+	int64 user_id = 1;			// >0 用户名 	==0 系统
+	LOG_LEAVE log_leave = 2;	// 日志等级
+	int64 timestamp = 3;		// 生成时间戳(秒)
+	string file_name = 4;		// 文件名
+	string func_name = 5;		// 函数名
+	int32 file_no = 6;			// 行号
+	string log_info = 7;		// 日志内容
+}
+
+message log_info_req {
+	repeated log_info log_data_list = 1;	// 可多个, 多个按照 顺序插入
+}
+
+message log_info_resp {
+	RET ret = 1;	// 只有 异常情况反馈
+}
