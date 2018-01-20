@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"logSystem/api"
@@ -262,6 +263,9 @@ func sendData(conn *net.Session) {
 func SetSaveLog(address string, chan_num int) (err error) {
 	// 创建tcp连接
 	conn := getConn(address)
+	if conn == nil {
+		return errors.New("连接不了...")
+	}
 	save_system = true
 
 	save_log_chan = make(chan *api.LogInfo, chan_num)

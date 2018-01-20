@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	m_orm orm.Ormer
+	m_orm     orm.Ormer
+	slave_orm orm.Ormer
 )
 
 func init() {
@@ -39,6 +40,32 @@ func init() {
 	}
 
 	m_orm = orm.NewOrm()
+
+	initSlave()
+}
+
+func initSlave() {
+	dbhost := beego.AppConfig.String("db.slave.host")
+	dbport := beego.AppConfig.String("db.slave.port")
+	dbuser := beego.AppConfig.String("db.slave.user")
+	dbpassword := beego.AppConfig.String("db.slave.password")
+	dbname := beego.AppConfig.String("db.slave.name")
+	timezone := beego.AppConfig.String("db.slave.timezone")
+	if dbport == "" {
+		dbport = "3306"
+	}
+	dsn := dbuser + ":" + dbpassword + "@tcp(" + dbhost + ":" + dbport + ")/" + dbname + "?charset=utf8"
+
+	if timezone != "" {
+		dsn = dsn + "&loc=" + url.QueryEscape(timezone)
+	}
+	orm.RegisterDataBase("slave", "mysql", dsn)
+
+	if beego.AppConfig.String("runmode") == "dev" {
+		orm.Debug = true
+	}
+
+	slave_orm = orm.NewOrm()
 }
 
 func TableName(name string) string {

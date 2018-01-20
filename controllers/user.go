@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"logSystem/libs"
-	"logSystem/modelsMaster"
+	slave "logSystem/models"
 	"sync"
 
 	"github.com/astaxie/beego"
@@ -14,12 +14,12 @@ type UserController struct {
 }
 
 var (
-	userList      = make(map[string]*models.User) // 用户帐号 -> 用户数据
-	userListMutex sync.RWMutex                    // 用户操作锁
+	userList      = make(map[string]*slave.User) // 用户帐号 -> 用户数据
+	userListMutex sync.RWMutex                   // 用户操作锁
 )
 
 func init() {
-	result, err := models.ReadAllUser()
+	result, err := slave.ReadAllUser()
 	if err != nil {
 		Error(err)
 		return
@@ -104,14 +104,14 @@ func (this *UserController) Status() {
 	this.redirect(beego.URLFor("UserController.List"))
 }
 
-func SetUserList(user *models.User) {
+func SetUserList(user *slave.User) {
 	Info("[SetUserList] name=", user.UserName)
 	userListMutex.Lock()
 	userList[user.UserName] = user
 	userListMutex.Unlock()
 }
 
-func GetUserList(username string) *models.User {
+func GetUserList(username string) *slave.User {
 	Debug("[GetUserList] username=", username)
 	if len(username) < 1 {
 		return nil
@@ -126,7 +126,7 @@ func GetUserList(username string) *models.User {
 	return nil
 }
 
-func GetUserListForId(id int64) *models.User {
+func GetUserListForId(id int64) *slave.User {
 	Debug("[GetUserListForId] id=", id)
 	if id < 1 {
 		return nil

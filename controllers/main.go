@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"logSystem/libs"
-	"logSystem/modelsMaster"
+	"logSystem/models"
 	"strings"
 	"time"
 
@@ -77,7 +77,18 @@ func (this *MainController) Login() {
 			} else {
 				user.LastIp = this.getClientIp()
 				user.LastLogin = time.Now()
-				models.UserUpdate(user)
+				models.UserUpdate(&models.User{
+					Id:         user.Id,
+					UserName:   user.UserName,
+					Password:   user.Password,
+					Salt:       user.Salt,
+					Email:      user.Email,
+					Phone:      user.Phone,
+					LastLogin:  user.LastLogin,
+					LastIp:     user.LastIp,
+					Status:     user.Status,
+					CreateTime: user.CreateTime,
+				})
 
 				authkey := libs.Md5([]byte(this.getClientIp() + "|" + user.Password + user.Salt))
 				if remember == "yes" {

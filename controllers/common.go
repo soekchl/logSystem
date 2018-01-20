@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"logSystem/libs"
-	"logSystem/modelsMaster"
+	"logSystem/models"
 	"strconv"
 	"strings"
 

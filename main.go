@@ -1,8 +1,7 @@
 package main
 
 import (
-	_ "logSystem/modelsMaster"
-	_ "logSystem/modelsSlave"
+	_ "logSystem/models"
 	_ "logSystem/routers"
 
 	"github.com/astaxie/beego"

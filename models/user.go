@@ -1,4 +1,4 @@
-package modelsSlave
+package models
 
 import (
 	"time"
@@ -35,7 +35,7 @@ func UserAdd(user *User) (int64, error) {
 func UserGetById(id int64) (*User, error) {
 	u := new(User)
 
-	err := m_orm.QueryTable(TableName("user")).Filter("id", id).One(u)
+	err := slave_orm.QueryTable(TableName("user")).Filter("id", id).One(u)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func UserGetById(id int64) (*User, error) {
 func UserGetByName(userName string) (*User, error) {
 	u := new(User)
 
-	err := m_orm.QueryTable(TableName("user")).Filter("user_name", userName).One(u)
+	err := slave_orm.QueryTable(TableName("user")).Filter("user_name", userName).One(u)
 	if err != nil {
 		return nil, err
 	}

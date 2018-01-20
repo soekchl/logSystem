@@ -1,4 +1,4 @@
-package modelsSlave
+package models
 
 import (
 	"time"
@@ -38,7 +38,7 @@ func LogMultiAdd(logs []*Log) error {
 }
 
 func (this *Log) ReadAll(query map[string]string, limit int) (logs []Log, err error) {
-	qs := m_orm.QueryTable(this)
+	qs := slave_orm.QueryTable(this)
 	if query != nil {
 		for k, v := range query {
 			qs = qs.Filter(k, v)
