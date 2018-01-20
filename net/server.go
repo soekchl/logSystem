@@ -1,6 +1,7 @@
 package net
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net"
 )
@@ -9,6 +10,7 @@ type Server struct {
 	listener     net.Listener
 	handler      Handler
 	sendChanSize int
+	config       *tls.Config
 }
 
 type HandlerFunc func(*Session)
@@ -21,8 +23,8 @@ func (f HandlerFunc) HandleSession(session *Session) {
 	f(session)
 }
 
-func Listen(network, address string, sendChanSize int, handler Handler) (*Server, error) {
-	listener, err := net.Listen(network, address)
+func Listen(network, address string, config *tls.Config, sendChanSize int, handler Handler) (*Server, error) {
+	listener, err := tls.Listen(network, address, config)
 	if err != nil {
 		return nil, fmt.Errorf("[Listen] Error: %v", err)
 	}
@@ -45,7 +47,7 @@ func (server *Server) Serve() error {
 		}
 
 		go func() {
-			session := newSession(&conn, server.sendChanSize)
+			session := newSession(conn, server.sendChanSize)
 			server.handler.HandleSession(session) // 处理函数
 		}()
 	}

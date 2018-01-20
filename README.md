@@ -1,16 +1,19 @@
 # logSystem
 
 # 调用模块添加
-	socket - tcp
-	传输用 pb
-	创建 net 模块 专门用于传输log
+
+	1、读写分离
 	
-这块的和 我 原先写的 mylog 要结合起来
-	把MyLog弄到这里 合并
-	
-	
+	2、查看日志选项
 
 	1、增加分表机制
 
+
+
+# ssl
+	openssl genrsa -out server.key 2048
+	openssl req -new -x509 -key server.key -out server.pem -days 3650
+	openssl genrsa -out client.key 2048
+	openssl req -new -x509 -key client.key -out client.pem -days 3650
 
 

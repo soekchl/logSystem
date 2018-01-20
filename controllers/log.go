@@ -34,7 +34,7 @@ func (this *LogController) List() {
 		row["FileName"] = v.FileName
 		row["FuncName"] = v.FuncName
 		row["FileNo"] = v.FileNo
-		row["Info"] = v.Info
+		row["Info"] = v.LogInfo
 		list[i] = row
 	}
 

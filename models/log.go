@@ -13,7 +13,7 @@ type Log struct {
 	FuncName   string    `orm:"size(64);index"`                    // 函数名
 	FileNo     int32     `orm:"default(0)"`                        // 行号
 	CreateTime time.Time `orm:"type(timestamp);null;auto_now_add"` // 创建时间
-	Info       string    `orm:"type(text)"`                        // 内容
+	LogInfo    string    `orm:"type(text)"`                        // 内容
 }
 
 const (
@@ -30,6 +30,11 @@ func (u *Log) TableName() string {
 
 func LogAdd(log *Log) (int64, error) {
 	return m_orm.Insert(log)
+}
+
+func LogMultiAdd(logs []*Log) error {
+	_, err := m_orm.InsertMulti(len(logs), logs)
+	return err
 }
 
 func (this *Log) ReadAll(query map[string]string, limit int) (logs []Log, err error) {

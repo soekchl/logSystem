@@ -31,10 +31,10 @@ type Session struct {
 	lastUseTime  int64 // 最后使用会话时间戳
 }
 
-func newSession(conn *net.Conn, chanSize int) *Session {
+func newSession(conn net.Conn, chanSize int) *Session {
 	session := &Session{
 		CloseChan: make(chan bool, 1),
-		conn:      *conn,
+		conn:      conn,
 		firstBuff: make([]byte, FirstReadSize),
 	}
 

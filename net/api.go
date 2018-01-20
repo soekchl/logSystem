@@ -1,6 +1,7 @@
 package net
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net"
 	"time"
@@ -10,22 +11,13 @@ type Handler interface {
 	HandleSession(*Session)
 }
 
-func Dial(network, address string, sendChanSize int) (*Session, error) {
-	conn, err := net.Dial(network, address)
+func Dial(network, address string, config *tls.Config, sendChanSize int) (*Session, error) {
+	conn, err := tls.Dial(network, address, config)
 	if err != nil {
 		return nil, fmt.Errorf("[Dial] Error: %v", err)
 	}
 
-	return newSession(&conn, sendChanSize), nil
-}
-
-func DialTimeout(network, address string, timeout time.Duration, sendChanSize int) (*Session, error) {
-	conn, err := net.DialTimeout(network, address, timeout)
-	if err != nil {
-		return nil, fmt.Errorf("[DialTimeout] Error: %v", err)
-	}
-
-	return newSession(&conn, sendChanSize), nil
+	return newSession(conn, sendChanSize), nil
 }
 
 func Accept(listener net.Listener) (net.Conn, error) {

@@ -3,7 +3,10 @@ package log
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
 	"logSystem/api"
 	"logSystem/libs"
 	"logSystem/net"
@@ -277,7 +280,29 @@ func SetSaveLog(address string, chan_num int) (err error) {
 }
 
 func getConn(address string) *net.Session {
-	client, err := net.Dial("tcp", address, 2000)
+	cert, err := tls.LoadX509KeyPair("key/client.pem", "key/client.key")
+	if err != nil {
+		Error(err)
+		return nil
+	}
+	certBytes, err := ioutil.ReadFile("key/client.pem")
+	if err != nil {
+		Error("Unable to read cert.pem ", err)
+		return nil
+	}
+	clientCertPool := x509.NewCertPool()
+	ok := clientCertPool.AppendCertsFromPEM(certBytes)
+	if !ok {
+		Error("failed to parse root certificate")
+		return nil
+	}
+	conf := &tls.Config{
+		RootCAs:            clientCertPool,
+		Certificates:       []tls.Certificate{cert},
+		InsecureSkipVerify: true,
+	}
+
+	client, err := net.Dial("tcp", address, conf, 2000)
 	if err != nil {
 		Error(err)
 		return nil
