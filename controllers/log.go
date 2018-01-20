@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"logSystem/libs"
-	"logSystem/models"
+	slave "logSystem/modelsSlave"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -21,7 +21,7 @@ func (this *LogController) List() {
 		page = 1
 	}
 
-	logs, _ := (&models.Log{}).ReadAll(nil, 100)
+	logs, _ := (&slave.Log{}).ReadAll(nil, 100)
 
 	count := len(logs)
 

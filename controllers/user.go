@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"logSystem/libs"
-	"logSystem/models"
+	"logSystem/modelsMaster"
 	"sync"
 
 	"github.com/astaxie/beego"

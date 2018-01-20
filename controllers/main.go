@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"logSystem/libs"
-	"logSystem/models"
+	"logSystem/modelsMaster"
 	"strings"
 	"time"
 

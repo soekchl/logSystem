@@ -9,7 +9,7 @@ import (
 	"logSystem/api"
 	"logSystem/libs"
 	. "logSystem/log"
-	"logSystem/models"
+	"logSystem/modelsMaster"
 	"logSystem/net"
 	"sync"
 	"time"
