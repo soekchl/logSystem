@@ -4,11 +4,10 @@ import (
 	"bufio"
 	"errors"
 	"io"
+	. "logSystem/libs"
 	"net"
 	"sync/atomic"
 	"time"
-
-	. "phone_fight/src/common/tool"
 
 	. "github.com/soekchl/myUtils"
 )
